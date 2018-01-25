@@ -3,8 +3,13 @@ import { Client } from '../app';
 
 export const getDraws: express.RequestHandler = async (req, res) => {
     const page = (req.query.page) ? req.query.page : 0;
-    const pageCount = (req.query.pageCount) ? req.query.pageCount : 20;
-    const qr = await Client.query(`SELECT * FROM newdraws LIMIT ${pageCount} OFFSET ${page * pageCount}`);
+    const resultsPerPage = (req.query.resultsPerPage) ? req.query.resultsPerPage : 20;
+
+    const queryText = 'SELECT name, ctime FROM newdraws LIMIT $1 OFFSET $2';
+    const qr = await Client.query(
+        queryText,
+        [resultsPerPage, resultsPerPage * page],
+    );
 
     res.json({
         draws: qr.rows,
