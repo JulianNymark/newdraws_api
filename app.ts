@@ -1,14 +1,27 @@
 import * as express from 'express';
-import './controllers/draws';
+import * as pg from 'pg';
+
+import * as db from './controllers/db';
 import * as draws from './controllers/draws';
+import { asyncMiddleware } from './utils';
 
-const app = express();
+let Client: pg.Client;
+let App;
 
-const router = express.Router();
+(async () => {
+    Client = await db.connect();
 
-app.get('/draws', draws.getDraws);
+    App = express();
 
-const port = 8000;
+    App.get('/draws', asyncMiddleware(draws.getDraws));
 
-app.listen(port);
-console.log(`listening on port: ${port}`);
+    const port = 8000;
+
+    App.listen(port);
+    console.log(`listening on port: ${port}`);
+})();
+
+export {
+    Client,
+    App,
+};
