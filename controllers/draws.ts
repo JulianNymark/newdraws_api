@@ -1,20 +1,27 @@
 import * as express from 'express';
 import { Client } from '../app';
+import * as Utils from '../utils';
 
 export const getDraws: express.RequestHandler = async (req, res) => {
     const page = (req.query.page) ? req.query.page : 0;
-    const resultsPerPage = (req.query.resultsPerPage) ? req.query.resultsPerPage : 20;
+    let resultsPerPage = (req.query.resultsPerPage) ? req.query.resultsPerPage : 20;
+    let filter: string = (req.query.filter) ? req.query.filter : '';
+
+    resultsPerPage = Utils.clamp(resultsPerPage, 0, 100);
+    filter = `%${filter}%`;
+    console.log(filter);
 
     const queryText = `
     SELECT name, ctime
     FROM newdraws
+    WHERE name ILIKE $1
     ORDER BY ctime DESC
-    LIMIT $1
-    OFFSET $2
+    LIMIT $2
+    OFFSET $3
     `;
     const qr = await Client.query(
         queryText,
-        [resultsPerPage, resultsPerPage * page],
+        [filter, resultsPerPage, resultsPerPage * page],
     );
 
     res.json({

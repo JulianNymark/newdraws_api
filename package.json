@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node build/app.js",
+    "start-no-compile": "nodemon build/app.js",
     "build": "tsc -p .",
     "dev": "concurrently -n \"tsc,node\" --kill-others \"npm run tsc-watch\" \"sleep 8s; LOG_LEVEL=debug nodemon --inspect build/app.js\"",
     "tsc-watch": "tsc -w -p ."

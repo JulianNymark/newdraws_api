@@ -8,16 +8,22 @@ import { asyncMiddleware } from './utils';
 let Client: pg.Client;
 let App;
 
+// TODO: soft rate limiting here!
+
 (async () => {
     Client = await db.connect();
 
     App = express();
 
+    App.use((req, res, next) => {
+        console.log(req.method, req.url, req.body);
+        next();
+    });
     App.get('/draws', asyncMiddleware(draws.getDraws));
 
     const port = 8000;
 
-    App.listen(port);
+    App.listen(8000);
     console.log(`listening on port: ${port}`);
 })();
 

@@ -44,6 +44,7 @@ var Client;
 exports.Client = Client;
 var App;
 exports.App = App;
+// TODO: soft rate limiting here!
 (function () { return __awaiter(_this, void 0, void 0, function () {
     var port;
     return __generator(this, function (_a) {
@@ -52,9 +53,13 @@ exports.App = App;
             case 1:
                 exports.Client = Client = _a.sent();
                 exports.App = App = express();
+                App.use(function (req, res, next) {
+                    console.log(req.method, req.url, req.body);
+                    next();
+                });
                 App.get('/draws', utils_1.asyncMiddleware(draws.getDraws));
                 port = 8000;
-                App.listen(port);
+                App.listen(8000);
                 console.log("listening on port: " + port);
                 return [2 /*return*/];
         }
