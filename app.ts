@@ -6,30 +6,34 @@ import * as draws from './controllers/draws';
 import { asyncMiddleware } from './utils';
 
 let Client: pg.Client;
-let App;
-
-// TODO: allow CORS
-
-// TODO: soft rate limiting here!
+let app;
 
 (async () => {
     Client = await db.connect();
 
-    App = express();
+    app = express();
 
-    App.use((req, res, next) => {
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        next();
+    });
+
+    // TODO: soft rate limiting here!
+
+    app.use((req, res, next) => {
         console.log(req.method, req.url, req.body);
         next();
     });
-    App.get('/draws', asyncMiddleware(draws.getDraws));
+    app.get('/draws', asyncMiddleware(draws.getDraws));
 
     const port = 8000;
 
-    App.listen(8000);
+    app.listen(8000);
     console.log(`listening on port: ${port}`);
 })();
 
 export {
     Client,
-    App,
+    app,
 };
