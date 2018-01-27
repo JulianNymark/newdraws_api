@@ -8,6 +8,8 @@ import { asyncMiddleware } from './utils';
 let Client: pg.Client;
 let App;
 
+// TODO: allow CORS
+
 // TODO: soft rate limiting here!
 
 (async () => {
