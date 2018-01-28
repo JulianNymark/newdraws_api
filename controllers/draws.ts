@@ -3,10 +3,11 @@ import { Client } from '../app';
 import * as Utils from '../utils';
 
 export const getDraws: express.RequestHandler = async (req, res) => {
-    const page = (req.query.page) ? req.query.page : 0;
+    let page = (req.query.page) ? req.query.page : 0;
     let resultsPerPage = (req.query.resultsPerPage) ? req.query.resultsPerPage : 20;
     let filter: string = (req.query.filter) ? req.query.filter : '';
 
+    page = Utils.clamp(page, 0, Infinity);
     resultsPerPage = Utils.clamp(resultsPerPage, 0, 100);
     filter = `%${filter}%`;
     console.log(filter);
