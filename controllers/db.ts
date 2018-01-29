@@ -5,7 +5,7 @@ export const connect = async () => {
     const client = new pg.Client({
         database: 'newdraws',
         host: 'localhost',
-        password: 'abcd1234',
+        password: process.env.PG_PASSWORD_NEWDRAWSAPI,
         user: 'newdrawsapi',
     });
 

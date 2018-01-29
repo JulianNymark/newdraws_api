@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as pg from 'pg';
 
@@ -7,6 +8,8 @@ import { asyncMiddleware } from './utils';
 
 let Client: pg.Client;
 let app;
+
+dotenv.config();
 
 (async () => {
     Client = await db.connect();
